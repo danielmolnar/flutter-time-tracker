@@ -1,3 +1,5 @@
+import 'package:flutter_time_tracker/services/auth_provider.dart';
+
 import 'services/auth.dart';
 import 'app/landing_page.dart';
 import 'package:flutter/material.dart';
@@ -12,13 +14,14 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Time Tracker',
-      theme: ThemeData(
-        primarySwatch: Colors.indigo,
-      ),
-      home: LandingPage(
-        auth: Auth(),
+    return AuthProvider(
+      auth: Auth(),
+      child: MaterialApp(
+        title: 'Time Tracker',
+        theme: ThemeData(
+          primarySwatch: Colors.indigo,
+        ),
+        home: LandingPage(),
       ),
     );
   }
