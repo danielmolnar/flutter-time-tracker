@@ -5,6 +5,7 @@ class SocialSignInButton extends CustomElevatedButton {
   SocialSignInButton({
     @required String text,
     @required String assetName,
+    bool isLoading,
     Color color,
     Color textColor,
     VoidCallback onPressed,
@@ -22,6 +23,7 @@ class SocialSignInButton extends CustomElevatedButton {
               Opacity(opacity: 0.0, child: Image.asset(assetName)),
             ],
           ),
+          isLoading: isLoading,
           color: color,
           onPressed: onPressed,
           height: 50,
