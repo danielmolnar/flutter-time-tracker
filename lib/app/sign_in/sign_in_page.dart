@@ -1,10 +1,9 @@
-import 'package:flutter_time_tracker/app/sign_in/sign_in_bloc.dart';
-
 import 'email_sign_in_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_time_tracker/services/auth.dart';
+import 'package:flutter_time_tracker/app/sign_in/sign_in_bloc.dart';
 import 'package:flutter_time_tracker/app/sign_in/sign_in_button.dart';
 import 'package:flutter_time_tracker/app/sign_in/social_sign_in_button.dart';
 import 'package:flutter_time_tracker/common_widgets/show_exception_alert_dialog.dart';
@@ -14,8 +13,10 @@ class SignInPage extends StatelessWidget {
   final SignInBloc bloc;
 
   static Widget create(BuildContext context) {
+    final auth = Provider.of<AuthBase>(context, listen: false);
+
     return Provider<SignInBloc>(
-        create: (_) => SignInBloc(),
+        create: (_) => SignInBloc(auth: auth),
         dispose: (_, bloc) => bloc.dispose(),
         child: Consumer<SignInBloc>(
             builder: (_, bloc, __) => SignInPage(bloc: bloc)));
@@ -35,37 +36,25 @@ class SignInPage extends StatelessWidget {
 
   Future<void> _signInAnonymously(BuildContext context) async {
     try {
-      bloc.setIsLoading(true);
-      final auth = Provider.of<AuthBase>(context, listen: false);
-      await auth.signInAnonymously();
+      await bloc.signInAnonymously();
     } on Exception catch (e) {
       _showSignInError(context, e);
-    } finally {
-      bloc.setIsLoading(false);
     }
   }
 
   Future<void> _signInWithGoogle(BuildContext context) async {
     try {
-      bloc.setIsLoading(true);
-      final auth = Provider.of<AuthBase>(context, listen: false);
-      await auth.signInWithGoogle();
+      await bloc.signInWithGoogle();
     } on Exception catch (e) {
       _showSignInError(context, e);
-    } finally {
-      bloc.setIsLoading(false);
     }
   }
 
   Future<void> _signInWithFacebook(BuildContext context) async {
     try {
-      bloc.setIsLoading(true);
-      final auth = Provider.of<AuthBase>(context, listen: false);
-      await auth.signInWithFacebook();
+      await bloc.signInWithFacebook();
     } on Exception catch (e) {
       _showSignInError(context, e);
-    } finally {
-      bloc.setIsLoading(false);
     }
   }
 
