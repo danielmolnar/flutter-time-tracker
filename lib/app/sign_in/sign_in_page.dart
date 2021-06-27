@@ -3,17 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_time_tracker/services/auth.dart';
+import 'package:flutter_time_tracker/app/sign_in/sign_in_bloc.dart';
 import 'package:flutter_time_tracker/app/sign_in/sign_in_button.dart';
 import 'package:flutter_time_tracker/app/sign_in/social_sign_in_button.dart';
 import 'package:flutter_time_tracker/common_widgets/show_exception_alert_dialog.dart';
 
-class SignInPage extends StatefulWidget {
-  @override
-  _SignInPageState createState() => _SignInPageState();
-}
+class SignInPage extends StatelessWidget {
+  const SignInPage({Key key, @required this.bloc}) : super(key: key);
+  final SignInBloc bloc;
 
-class _SignInPageState extends State<SignInPage> {
-  bool isLoading = false;
+  static Widget create(BuildContext context) {
+    final auth = Provider.of<AuthBase>(context, listen: false);
+
+    return Provider<SignInBloc>(
+        create: (_) => SignInBloc(auth: auth),
+        dispose: (_, bloc) => bloc.dispose(),
+        child: Consumer<SignInBloc>(
+            builder: (_, bloc, __) => SignInPage(bloc: bloc)));
+  }
 
   void _showSignInError(BuildContext context, Exception exception) {
     if (exception is FirebaseException &&
@@ -29,37 +36,25 @@ class _SignInPageState extends State<SignInPage> {
 
   Future<void> _signInAnonymously(BuildContext context) async {
     try {
-      setState(() => isLoading = true);
-      final auth = Provider.of<AuthBase>(context, listen: false);
-      await auth.signInAnonymously();
+      await bloc.signInAnonymously();
     } on Exception catch (e) {
       _showSignInError(context, e);
-    } finally {
-      setState(() => isLoading = false);
     }
   }
 
   Future<void> _signInWithGoogle(BuildContext context) async {
     try {
-      setState(() => isLoading = true);
-      final auth = Provider.of<AuthBase>(context, listen: false);
-      await auth.signInWithGoogle();
+      await bloc.signInWithGoogle();
     } on Exception catch (e) {
       _showSignInError(context, e);
-    } finally {
-      setState(() => isLoading = false);
     }
   }
 
   Future<void> _signInWithFacebook(BuildContext context) async {
     try {
-      setState(() => isLoading = true);
-      final auth = Provider.of<AuthBase>(context, listen: false);
-      await auth.signInWithFacebook();
+      await bloc.signInWithFacebook();
     } on Exception catch (e) {
       _showSignInError(context, e);
-    } finally {
-      setState(() => isLoading = false);
     }
   }
 
@@ -74,25 +69,29 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
-    var scaffold = Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: Text('Time Tracker'),
         elevation: 2.0,
       ),
-      body: _buildContent(context),
+      body: StreamBuilder<bool>(
+          stream: bloc.isLoadingStream,
+          initialData: false,
+          builder: (context, snapshot) {
+            return _buildContent(context, snapshot.data);
+          }),
       backgroundColor: Colors.grey[200],
     );
-    return scaffold;
   }
 
-  Widget _buildContent(BuildContext context) {
+  Widget _buildContent(BuildContext context, bool isLoading) {
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          SizedBox(height: 50, child: _buildHeader()),
+          SizedBox(height: 50, child: _buildHeader(isLoading)),
           SizedBox(height: 48.0),
           SocialSignInButton(
             isLoading: isLoading,
@@ -138,7 +137,7 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(bool isLoading) {
     if (isLoading) {
       return Center(
         child: CircularProgressIndicator(),
