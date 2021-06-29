@@ -1,4 +1,4 @@
-import 'home/jobs_page.dart';
+import 'home/jobs/jobs_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
