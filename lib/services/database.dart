@@ -4,23 +4,25 @@ import 'package:flutter_time_tracker/app/home/models/job.dart';
 import 'package:flutter_time_tracker/services/firestore_service.dart';
 
 abstract class Database {
-  Future<void> createJob(Job job);
+  Future<void> setJob(Job job);
   Stream<List<Job>> jobsStream();
 }
+
+String documentIdFromCurentDate() => DateTime.now().toIso8601String();
 
 class FirestoreDatabase implements Database {
   FirestoreDatabase({@required this.uid}) : assert(uid != null);
   final String uid;
 
-  final _service = FireStoreService.instance;
+  final _service = FirestoreService.instance;
 
-  Future<void> createJob(Job job) => _service.setData(
-        path: APIPath.job(uid, 'job_abc'),
+  Future<void> setJob(Job job) => _service.setData(
+        path: APIPath.job(uid, job.id),
         data: job.toMap(),
       );
 
-  Stream<List<Job>> jobsStream() => _service.collenctionStream(
+  Stream<List<Job>> jobsStream() => _service.collectionStream(
         path: APIPath.jobs(uid),
-        builder: (data) => Job.fromMap(data),
+        builder: (data, documentId) => Job.fromMap(data, documentId),
       );
 }
