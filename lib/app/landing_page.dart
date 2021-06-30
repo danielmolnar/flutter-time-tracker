@@ -1,4 +1,4 @@
-import 'home/jobs/jobs_page.dart';
+import 'home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,7 +20,7 @@ class LandingPage extends StatelessWidget {
           } else
             return Provider<Database>(
                 create: (_) => FirestoreDatabase(uid: user.uid),
-                child: JobsPage());
+                child: HomePage());
         }
         return Scaffold(
             body: Center(

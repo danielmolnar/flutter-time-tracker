@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_time_tracker/services/database.dart';
 import 'package:flutter_time_tracker/app/home/models/job.dart';
@@ -12,9 +11,9 @@ class EditJobPage extends StatefulWidget {
   final Database database;
   final Job job;
 
-  static Future<void> show(BuildContext context, {Job job}) async {
-    final database = Provider.of<Database>(context, listen: false);
-    await Navigator.of(context).push(
+  static Future<void> show(BuildContext context,
+      {Database database, Job job}) async {
+    await Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute(
         builder: (context) => EditJobPage(database: database, job: job),
         fullscreenDialog: true,
@@ -66,7 +65,7 @@ class _EditJobPageState extends State<EditJobPage> {
             defaultActionText: 'OK',
           );
         } else {
-          final id = widget.job?.id ?? documentIdFromCurentDate();
+          final id = widget.job?.id ?? documentIdFromCurrentDate();
           final job = Job(id: id, name: _name, ratePerHour: _ratePerHour);
           await widget.database.setJob(job);
           Navigator.of(context).pop();
