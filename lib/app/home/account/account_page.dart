@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_time_tracker/common_widgets/avatar.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_time_tracker/services/auth.dart';
+import 'package:flutter_time_tracker/common_widgets/avatar.dart';
 import 'package:flutter_time_tracker/common_widgets/show_alert_dialog.dart';
 
 class AccountPage extends StatelessWidget {

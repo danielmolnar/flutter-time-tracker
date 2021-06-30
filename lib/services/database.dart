@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_time_tracker/app/home/models/entry.dart';
 import 'package:flutter_time_tracker/services/api_path.dart';
 import 'package:flutter_time_tracker/app/home/models/job.dart';
+import 'package:flutter_time_tracker/app/home/models/entry.dart';
 import 'package:flutter_time_tracker/services/firestore_service.dart';
 
 abstract class Database {
