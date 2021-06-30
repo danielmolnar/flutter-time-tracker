@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_time_tracker/app/home/job_entries/format.dart';
 import 'package:flutter_time_tracker/app/home/job_entries/input_dropdown.dart';
